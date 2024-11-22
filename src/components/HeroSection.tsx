@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const HeroSection: React.FC = () => {
   return (
-		<section id="home" className="relative h-dvh w-full flex items-center justify-center">
+		<section id="home" className="relative h-[820px] md:h-dvh w-full flex items-center justify-center">
 			<Image
 				src="https://res.cloudinary.com/dw4ecbwo9/image/upload/c_pad,b_gen_fill,w_1920,h_1080,ar_16:9/v1732250788/wp9441481_xecwvr.webp"
 				alt="Barbershop interior"
