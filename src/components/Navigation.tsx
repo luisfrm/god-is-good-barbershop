@@ -63,7 +63,9 @@ const Navigation = () => {
 		<nav className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
 			<div className="max-w-7xl mx-auto px-4">
 				<div className="flex items-center justify-between h-16">
-					<h1 className="text-3xl font-bold text-gray-800 font-serif drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] transition-all duration-150 hover:drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)] cursor-pointer">
+					<h1 className="text-3xl font-bold text-gray-800 font-serif drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] transition-all duration-150 hover:drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)] cursor-pointer"
+					onClick={()=>scrollToSection("home")}
+					>
 						God&apos;s Good
 					</h1>
 					<ul className="hidden md:flex gap-8">
