@@ -9,7 +9,15 @@ const HeroSection: React.FC = () => {
 				src="https://res.cloudinary.com/dw4ecbwo9/image/upload/c_pad,b_gen_fill,w_1920,h_1080,ar_16:9/v1732250788/wp9441481_xecwvr.webp"
 				alt="Barbershop interior"
 				priority
-				className="absolute z-0 object-cover"
+				className="absolute z-0 object-cover hidden md:block"
+				fill
+				sizes="100vw"
+			/>
+			<Image
+				src="https://res.cloudinary.com/dw4ecbwo9/image/upload/c_pad,b_gen_fill,w_385,h_684,ar_9:16/v1732250788/wp9441481_xecwvr.webp"
+				alt="Barbershop interior mobile"
+				priority
+				className="absolute z-0 object-fill md:hidden"
 				fill
 				sizes="100vw"
 			/>
