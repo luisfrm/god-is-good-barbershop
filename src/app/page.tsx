@@ -1,7 +1,6 @@
 import About from "@/components/About";
 import Contact from "@/components/Contact";
 import HeroSection from "@/components/HeroSection";
-import Map from "@/components/Map";
 import Services from "@/components/Services";
 
 export default function Home() {
