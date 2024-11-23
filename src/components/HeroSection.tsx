@@ -28,8 +28,8 @@ const HeroSection: React.FC = () => {
 				<p className="text-xl md:text-2xl text-white mb-8 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] text-balance">
 					Experiencia de barbería premium desde 2024
 				</p>
-				<Link href="https://api.whatsapp.com/send?phone=584246248690">
-					<Button variant="outline" className="shadow-sm hover:bg-black hover:text-white border-0">
+				<Link target='_blank' href="https://api.whatsapp.com/send?phone=584246248690">
+					<Button variant="outline" className="shadow-sm bg-white hover:bg-black hover:text-white border-0">
 						Reserva tu cita
 					</Button>
 				</Link>

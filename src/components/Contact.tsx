@@ -38,14 +38,14 @@ const Contact = () => {
 				<h3 className="text-4xl mb-12 font-bold">Contacto</h3>
 				<div className="grid grid-cols-1 lg:grid-cols-3 justify-center gap-12 md:gap-8">
 					{contact.map((item, index) => (
-						<div className="flex flex-col gap-4 items-center" key={index}>
-							{item.icon}
+						<div className="flex flex-col gap-0 md:gap-4 items-center" key={index}>
+							<span className='mb-3 md:mb-0'>{item.icon}</span>
 							<h4 className='font-semibold text-4xl font-serif'>{item.title}</h4>
 							{item.url ? <Link className='text-lg' target='_blank' href={item.url}>{item.description}</Link> : <p>{item.description}</p>}
 						</div>
 					))}
 				</div>
-        <Link href="https://api.whatsapp.com/send?phone=584246248690">
+        <Link target='_blank' href="https://api.whatsapp.com/send?phone=584246248690">
 					<Button variant="default" className="shadow-sm border-0 mt-12">
 						Reserva tu cita
 					</Button>
