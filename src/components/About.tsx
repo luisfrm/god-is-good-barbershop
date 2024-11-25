@@ -1,5 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
+import H3_Heading from './H3_Heading';
 
 interface About {
   title: string;
@@ -30,7 +31,7 @@ const About = () => {
 						/>
 					</div>
 					<div className="px-5 md:px-0 md:w-1/2">
-						<h3 className="text-4xl mb-8 font-bold">{about.title}</h3>
+						<H3_Heading>{about.title}</H3_Heading>
 						{about.description.map((desc, index) => (
 							<p className={`text-lg text-pretty ${index == 0 && "mb-4"}`} key={index}>
 								{desc}

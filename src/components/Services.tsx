@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { Scissors, BeakerIcon as Beard, SprayCanIcon as Spray } from 'lucide-react'
+import H3_Heading from './H3_Heading'
 
 interface Service {
   name: string
@@ -34,12 +35,12 @@ const Services = () => {
   return (
 		<section id='services' className="w-full bg-gray-900 py-28">
 			<div className="max-w-6xl mx-auto text-center">
-				<h3 className="text-4xl text-white mb-12 font-bold">Nuestros Servicios</h3>
+				<H3_Heading>Nuestros Servicios</H3_Heading>
 				<div className="grid grid-cols-1 lg:grid-cols-3 justify-between items-center gap-10 md:gap-0">
 					{services.map((serv, index) => (
 						<div className="flex flex-col gap-4 justify-center items-center" key={index}>
 							<div className="h-12 w-12 bg-white rounded-full flex justify-center items-center">{serv.icon}</div>
-							<h3 className="text-3xl text-white font-bold">{serv.name}</h3>
+							<h4 className="text-3xl text-white font-bold">{serv.name}</h4>
 							<p className='text-white text-sm'>{serv.description}</p>
 						</div>
 					))}
