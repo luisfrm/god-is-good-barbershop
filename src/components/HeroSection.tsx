@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { Button } from "./ui/button";
 import Link from "next/link";
+import { whatsappUrl } from "@/lib/utils";
+import Logo from "./Logo";
 
 const HeroSection: React.FC = () => {
   return (
@@ -22,13 +24,13 @@ const HeroSection: React.FC = () => {
 				sizes="100vw"
 			/>
 			<div className="z-10 relative flex flex-col items-center text-center bg-[#000] bg-opacity-30 p-8 rounded-lg">
-				<h2 className="text-5xl md:text-7xl font-bold mb-4 text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] text-balance">
+				<Logo>
 					Estilo Clásico, Toque Moderno
-				</h2>
+				</Logo>
 				<p className="text-xl md:text-2xl text-white mb-8 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] text-balance">
 					Experiencia de barbería premium desde 2024
 				</p>
-				<Link target='_blank' href="https://api.whatsapp.com/send?phone=584246248690">
+				<Link target="_blank" href={whatsappUrl}>
 					<Button variant="outline" className="shadow-sm bg-white hover:bg-black hover:text-white border-0">
 						Reserva tu cita
 					</Button>
