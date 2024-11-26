@@ -35,7 +35,7 @@ const Services = () => {
   return (
 		<section id='services' className="w-full bg-gray-900 py-28">
 			<div className="max-w-6xl mx-auto text-center">
-				<H3_Heading>Nuestros Servicios</H3_Heading>
+				<H3_Heading className='text-white'>Nuestros Servicios</H3_Heading>
 				<div className="grid grid-cols-1 lg:grid-cols-3 justify-between items-center gap-10 md:gap-0">
 					{services.map((serv, index) => (
 						<div className="flex flex-col gap-4 justify-center items-center" key={index}>
