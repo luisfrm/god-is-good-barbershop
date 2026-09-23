@@ -206,7 +206,7 @@ export async function logout(): Promise<void> {
 
 /** Ensure the D1 binding is reachable (throws on misconfig — no silent fallback). */
 export async function assertDb(): Promise<void> {
-  await getDb()
+  await (await getDb())
     .prepare("SELECT 1")
     .first();
 }

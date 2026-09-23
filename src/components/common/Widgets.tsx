@@ -46,18 +46,6 @@ export default function Widgets({
   const cleanWhatsApp = whatsappNumber?.replace(/\D/g, "") ?? "";
   const hasWhatsApp = cleanWhatsApp.length > 0;
 
-  // Dynamically calculate slot position:
-  // Slot 0 = bottom-6 (24px)
-  // Slot 1 = bottom-24 (96px, 72px step = 16px gap)
-  let nextSlot = showScrollTop ? 1 : 0;
-  const whatsappSlot = hasWhatsApp ? nextSlot++ : -1;
-
-  const getBottomClass = (slot: number) => {
-    if (slot === 0) return "bottom-6";
-    if (slot === 1) return "bottom-24";
-    return "bottom-6";
-  };
-
   const openWhatsApp = () => {
     if (!cleanWhatsApp) return;
     window.open(`https://wa.me/${cleanWhatsApp}`, "_blank", "noopener,noreferrer");
@@ -69,10 +57,7 @@ export default function Widgets({
       {hasWhatsApp && (
         <button
           onClick={openWhatsApp}
-          className={cn(
-            "group fixed right-6 z-50 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl",
-            getBottomClass(whatsappSlot)
-          )}
+          className="group fixed right-6 bottom-6 z-50 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl"
           type="button"
           aria-label="Contactar por WhatsApp"
           title="Contactar por WhatsApp"
@@ -85,11 +70,15 @@ export default function Widgets({
       )}
 
       {/* Scroll to Top Widget */}
+      {/* Fixed slot above WhatsApp so the green button never jumps when this
+          one appears. */}
       <button
         onClick={scrollToTop}
         className={cn(
-          "bottom-6 group fixed right-6 z-50 bg-primary text-primary-foreground hover:bg-primary/90 p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl animate-in slide-in-from-bottom-2",
-          showScrollTop ? "opacity-100" : "opacity-0 pointer-events-none"
+          "bottom-24 group fixed right-6 z-50 bg-primary text-primary-foreground hover:bg-primary/90 p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl",
+          showScrollTop
+            ? "translate-y-0 opacity-100"
+            : "pointer-events-none translate-y-2 opacity-0"
         )}
         type="button"
         aria-label="Volver arriba"

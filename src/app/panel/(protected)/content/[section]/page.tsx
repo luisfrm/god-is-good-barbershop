@@ -9,14 +9,20 @@ import {
   type CmsSectionKey,
   type HomeAbout,
   type HomeContact,
+  type HomeCta,
+  type HomeFaq,
+  type HomeGallery,
   type HomeHero,
   type HomeServices,
+  type HomeTestimonials,
+  type LegalPage,
   type SiteMeta,
   type SiteNav,
 } from "@/types/cms";
 import ServicesItemsEditor from "./ServicesItemsEditor";
 import NavItemsEditor from "./NavItemsEditor";
 import ParagraphsEditor from "./ParagraphsEditor";
+import RepeaterEditor from "@/components/panel/RepeaterEditor";
 import { FormError, SubmitButton } from "@/components/panel/FormError";
 
 export const dynamic = "force-dynamic";
@@ -152,6 +158,109 @@ function SectionFields({
         </div>
       );
     }
+    case "home.gallery": {
+      const d = data as HomeGallery;
+      return (
+        <div className="grid gap-4">
+          <Field label="Eyebrow" name="eyebrow" defaultValue={d.eyebrow} />
+          <Field label="Título" name="title" defaultValue={d.title} />
+          <Field label="Subtítulo" name="subtitle" defaultValue={d.subtitle} />
+          <RepeaterEditor
+            name="items"
+            label="Imágenes"
+            singularLabel="imagen"
+            fields={[
+              {
+                name: "src",
+                label: "URL de la imagen",
+                required: true,
+                fullWidth: true,
+                placeholder: "https://…/foto.webp",
+              },
+              { name: "alt", label: "Texto alternativo", fullWidth: true },
+            ]}
+            initialItems={d.items.map((i) => ({ ...i }))}
+            emptyItem={{ src: "", alt: "" }}
+            serialize={(items) => items.filter((i) => String(i.src).trim())}
+          />
+        </div>
+      );
+    }
+    case "home.testimonials": {
+      const d = data as HomeTestimonials;
+      return (
+        <div className="grid gap-4">
+          <Field label="Eyebrow" name="eyebrow" defaultValue={d.eyebrow} />
+          <Field label="Título" name="title" defaultValue={d.title} />
+          <Field label="Subtítulo" name="subtitle" defaultValue={d.subtitle} />
+          <RepeaterEditor
+            name="items"
+            label="Testimonios"
+            singularLabel="testimonio"
+            fields={[
+              { name: "author", label: "Cliente", required: true },
+              { name: "meta", label: "Detalle (ciudad, visita…)" },
+              {
+                name: "rating",
+                label: "Estrellas (1-5)",
+                type: "number",
+              },
+              {
+                name: "text",
+                label: "Testimonio",
+                type: "textarea",
+                required: true,
+                fullWidth: true,
+              },
+            ]}
+            initialItems={d.items.map((i) => ({ ...i }))}
+            emptyItem={{ author: "", meta: "", rating: 5, text: "" }}
+            serialize={(items) =>
+              items.filter(
+                (i) => String(i.author).trim() && String(i.text).trim()
+              )
+            }
+          />
+        </div>
+      );
+    }
+    case "home.faq": {
+      const d = data as HomeFaq;
+      return (
+        <div className="grid gap-4">
+          <Field label="Eyebrow" name="eyebrow" defaultValue={d.eyebrow} />
+          <Field label="Título" name="title" defaultValue={d.title} />
+          <Field label="Subtítulo" name="subtitle" defaultValue={d.subtitle} />
+          <RepeaterEditor
+            name="items"
+            label="Preguntas"
+            singularLabel="pregunta"
+            fields={[
+              {
+                name: "question",
+                label: "Pregunta",
+                required: true,
+                fullWidth: true,
+              },
+              {
+                name: "answer",
+                label: "Respuesta",
+                type: "textarea",
+                required: true,
+                fullWidth: true,
+              },
+            ]}
+            initialItems={d.items.map((i) => ({ ...i }))}
+            emptyItem={{ question: "", answer: "" }}
+            serialize={(items) =>
+              items.filter(
+                (i) => String(i.question).trim() && String(i.answer).trim()
+              )
+            }
+          />
+        </div>
+      );
+    }
     case "home.contact": {
       const d = data as HomeContact;
       return (
@@ -163,6 +272,94 @@ function SectionFields({
           <Field label="Label dirección" name="addressTitle" defaultValue={d.addressTitle} />
           <Field label="Label teléfono" name="phoneTitle" defaultValue={d.phoneTitle} />
           <Field label="Label email" name="emailTitle" defaultValue={d.emailTitle} />
+          <Field
+            label="Título del horario"
+            name="hoursTitle"
+            defaultValue={d.hoursTitle ?? "Horario de atención"}
+          />
+          <Field
+            label="Título del formulario"
+            name="formTitle"
+            defaultValue={d.formTitle ?? "Escríbenos"}
+          />
+          <Field
+            label="Subtítulo del formulario"
+            name="formSubtitle"
+            defaultValue={
+              d.formSubtitle ??
+              "Cuéntanos qué necesitas y te respondemos al instante."
+            }
+          />
+          <Field
+            label="Botón del formulario"
+            name="formButtonText"
+            defaultValue={d.formButtonText ?? "Enviar mensaje"}
+          />
+        </div>
+      );
+    }
+    case "home.cta": {
+      const d = data as HomeCta;
+      return (
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field label="Eyebrow" name="eyebrow" defaultValue={d.eyebrow} />
+          <Field label="Título" name="title" defaultValue={d.title} />
+          <Field label="Subtítulo" name="subtitle" defaultValue={d.subtitle} />
+          <Field label="Botón principal" name="primaryText" defaultValue={d.primaryText} />
+          <Field label="Enlace principal" name="primaryHref" defaultValue={d.primaryHref} />
+          <Field label="Botón secundario" name="secondaryText" defaultValue={d.secondaryText} />
+          <Field label="Enlace secundario" name="secondaryHref" defaultValue={d.secondaryHref} />
+        </div>
+      );
+    }
+    case "legal.terms":
+    case "legal.privacy": {
+      const d = data as LegalPage;
+      return (
+        <div className="grid gap-4">
+          <Field label="Título" name="title" defaultValue={d.title} />
+          <Field
+            label="Última actualización (YYYY-MM-DD)"
+            name="updatedAt"
+            defaultValue={d.updatedAt}
+          />
+          <label className="text-sm font-medium">
+            Introducción
+            <textarea
+              name="intro"
+              rows={3}
+              required
+              defaultValue={d.intro}
+              className={`${inputClass} mt-1`}
+            />
+          </label>
+          <RepeaterEditor
+            name="sections"
+            label="Secciones"
+            singularLabel="sección"
+            fields={[
+              {
+                name: "heading",
+                label: "Encabezado",
+                required: true,
+                fullWidth: true,
+              },
+              {
+                name: "body",
+                label: "Texto (deja una línea en blanco entre párrafos)",
+                type: "textarea",
+                required: true,
+                fullWidth: true,
+              },
+            ]}
+            initialItems={d.sections.map((s) => ({ ...s }))}
+            emptyItem={{ heading: "", body: "" }}
+            serialize={(items) =>
+              items.filter(
+                (i) => String(i.heading).trim() && String(i.body).trim()
+              )
+            }
+          />
         </div>
       );
     }

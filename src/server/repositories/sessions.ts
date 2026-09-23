@@ -6,7 +6,7 @@ export async function insertSession(input: {
   userId: string;
   expiresAt: string;
 }): Promise<void> {
-  await getDb()
+  await (await getDb())
     .prepare(
       "INSERT INTO sessions (token, user_id, expires_at) VALUES (?1, ?2, ?3)"
     )
@@ -15,7 +15,7 @@ export async function insertSession(input: {
 }
 
 export async function findSession(token: string): Promise<SessionRow | null> {
-  const row = await getDb()
+  const row = await (await getDb())
     .prepare("SELECT * FROM sessions WHERE token = ?1")
     .bind(token)
     .first<SessionRow>();
@@ -28,11 +28,11 @@ export async function findSession(token: string): Promise<SessionRow | null> {
 }
 
 export async function deleteSession(token: string): Promise<void> {
-  await getDb().prepare("DELETE FROM sessions WHERE token = ?1").bind(token).run();
+  await (await getDb()).prepare("DELETE FROM sessions WHERE token = ?1").bind(token).run();
 }
 
 export async function deleteSessionsForUser(userId: string): Promise<void> {
-  await getDb()
+  await (await getDb())
     .prepare("DELETE FROM sessions WHERE user_id = ?1")
     .bind(userId)
     .run();

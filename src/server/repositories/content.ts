@@ -5,7 +5,7 @@ import type { CmsSectionKey } from "@/types/cms";
 export async function findSection(
   section: CmsSectionKey
 ): Promise<ContentRow | null> {
-  return getDb()
+  return (await getDb())
     .prepare("SELECT * FROM content WHERE section = ?1")
     .bind(section)
     .first<ContentRow>();
@@ -15,7 +15,7 @@ export async function upsertSection(
   section: CmsSectionKey,
   dataJson: string
 ): Promise<void> {
-  await getDb()
+  await (await getDb())
     .prepare(
       `INSERT INTO content (section, data, updated_at)
        VALUES (?1, ?2, strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))

@@ -27,8 +27,13 @@ import type {
   CmsSectionKey,
   HomeAbout,
   HomeContact,
+  HomeCta,
+  HomeFaq,
+  HomeGallery,
   HomeHero,
   HomeServices,
+  HomeTestimonials,
+  LegalPage,
   SiteMeta,
   SiteNav,
 } from "@/types/cms";
@@ -290,6 +295,53 @@ export async function saveSectionAction(
         await saveContent(section, data);
         break;
       }
+      case "home.gallery": {
+        const items = parseJsonField<HomeGallery["items"]>(
+          formData.get("items"),
+          "items"
+        );
+        const data: HomeGallery = {
+          eyebrow: str(formData, "eyebrow"),
+          title: str(formData, "title"),
+          subtitle: str(formData, "subtitle"),
+          items: Array.isArray(items) ? items : [],
+        };
+        await saveContent(section, data);
+        break;
+      }
+      case "home.testimonials": {
+        const raw = parseJsonField<HomeTestimonials["items"]>(
+          formData.get("items"),
+          "items"
+        );
+        const data: HomeTestimonials = {
+          eyebrow: str(formData, "eyebrow"),
+          title: str(formData, "title"),
+          subtitle: str(formData, "subtitle"),
+          items: (Array.isArray(raw) ? raw : []).map((item) => ({
+            author: item.author,
+            meta: item.meta ?? "",
+            rating: Math.max(1, Math.min(5, Math.round(Number(item.rating) || 5))),
+            text: item.text,
+          })),
+        };
+        await saveContent(section, data);
+        break;
+      }
+      case "home.faq": {
+        const items = parseJsonField<HomeFaq["items"]>(
+          formData.get("items"),
+          "items"
+        );
+        const data: HomeFaq = {
+          eyebrow: str(formData, "eyebrow"),
+          title: str(formData, "title"),
+          subtitle: str(formData, "subtitle"),
+          items: Array.isArray(items) ? items : [],
+        };
+        await saveContent(section, data);
+        break;
+      }
       case "home.contact": {
         const data: HomeContact = {
           eyebrow: str(formData, "eyebrow"),
@@ -299,6 +351,45 @@ export async function saveSectionAction(
           addressTitle: str(formData, "addressTitle"),
           phoneTitle: str(formData, "phoneTitle"),
           emailTitle: str(formData, "emailTitle"),
+          hoursTitle: str(formData, "hoursTitle"),
+          formTitle: str(formData, "formTitle"),
+          formSubtitle: str(formData, "formSubtitle"),
+          formButtonText: str(formData, "formButtonText"),
+        };
+        await saveContent(section, data);
+        break;
+      }
+      case "home.cta": {
+        const data: HomeCta = {
+          eyebrow: str(formData, "eyebrow"),
+          title: str(formData, "title"),
+          subtitle: str(formData, "subtitle"),
+          primaryText: str(formData, "primaryText"),
+          primaryHref: str(formData, "primaryHref"),
+          secondaryText: str(formData, "secondaryText"),
+          secondaryHref: str(formData, "secondaryHref"),
+        };
+        await saveContent(section, data);
+        break;
+      }
+      case "legal.terms":
+      case "legal.privacy": {
+        const sections = parseJsonField<LegalPage["sections"]>(
+          formData.get("sections"),
+          "sections"
+        );
+        if (!Array.isArray(sections) || sections.length === 0) {
+          redirect(
+            `/panel/content?error=${encodeURIComponent(
+              "Debe haber al menos una sección"
+            )}`
+          );
+        }
+        const data: LegalPage = {
+          title: str(formData, "title"),
+          updatedAt: str(formData, "updatedAt"),
+          intro: str(formData, "intro"),
+          sections,
         };
         await saveContent(section, data);
         break;

@@ -1,13 +1,17 @@
-import { Mail, MapPin, Phone, type LucideIcon } from "lucide-react";
+import { Clock, Mail, MapPin, Phone, type LucideIcon } from "lucide-react";
 import PageSection from "@/components/common/PageSection";
 import { Headline } from "@/components/common/Headline";
 import { Button } from "@/components/ui/button";
+import ContactQuickForm from "./ContactQuickForm";
+import { formatTimeLabel } from "@/server/scheduling/time";
+import { WEEKDAYS, WEEKDAY_LABELS } from "@/types/scheduling";
 import type { HomeContact } from "@/types/cms";
-import type { SettingsBusiness } from "@/server/models";
+import type { SettingsBusiness, SettingsScheduling } from "@/server/models";
 
 interface ContactProps {
   content: HomeContact;
   business: SettingsBusiness;
+  scheduling: SettingsScheduling;
 }
 
 interface ContactItem {
@@ -17,7 +21,7 @@ interface ContactItem {
   url?: string;
 }
 
-const Contact = ({ content, business }: ContactProps) => {
+const Contact = ({ content, business, scheduling }: ContactProps) => {
   const contactItems: ContactItem[] = [
     {
       title: content.addressTitle,
@@ -38,6 +42,10 @@ const Contact = ({ content, business }: ContactProps) => {
       url: `mailto:${business.email}`,
     },
   ];
+
+  const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(
+    business.address
+  )}&output=embed`;
 
   return (
     <PageSection id="contact" className="bg-muted">
@@ -93,6 +101,73 @@ const Contact = ({ content, business }: ContactProps) => {
             </div>
           );
         })}
+      </div>
+
+      {/* Both columns stretch to the tallest one; the map grows and the form
+          absorbs its leftover height so neither ends in a bordered void. */}
+      <div className="mt-8 grid items-stretch gap-6 lg:grid-cols-2">
+        <div className="flex flex-col gap-6">
+          <div className="relative min-h-64 flex-1 overflow-hidden rounded-2xl border border-border bg-background shadow-xs">
+            <iframe
+              title={`Mapa de ${business.businessName}`}
+              src={mapSrc}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className="absolute inset-0 h-full w-full border-0"
+            />
+          </div>
+
+          <div className="rounded-2xl border border-border bg-background p-6 shadow-xs">
+            <h3 className="flex items-center gap-2 font-serif text-xl font-bold text-foreground">
+              <Clock className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
+              {content.hoursTitle ?? "Horario de atención"}
+            </h3>
+            <ul className="mt-4 space-y-2 text-sm">
+              {WEEKDAYS.map((day) => {
+                const schedule = scheduling.workHours.find(
+                  (w) => w.day === day
+                );
+                return (
+                  <li
+                    key={day}
+                    className="flex justify-between gap-4 border-b border-border/60 pb-2 last:border-0"
+                  >
+                    <span className="text-muted-foreground">
+                      {WEEKDAY_LABELS[day]}
+                    </span>
+                    <span className="font-medium text-foreground">
+                      {schedule
+                        ? schedule.ranges
+                            .map(
+                              (r) =>
+                                `${formatTimeLabel(r.start)} – ${formatTimeLabel(
+                                  r.end
+                                )}`
+                            )
+                            .join(" · ")
+                        : "Cerrado"}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+            <p className="mt-3 text-xs text-muted-foreground">
+              Zona horaria: {scheduling.timezone} · citas de{" "}
+              {scheduling.sessionDuration} min
+            </p>
+          </div>
+        </div>
+
+        <ContactQuickForm
+          phone={business.phone}
+          fallbackEmail={business.email}
+          title={content.formTitle ?? "Escríbenos"}
+          subtitle={
+            content.formSubtitle ??
+            "Cuéntanos qué necesitas y te respondemos al instante."
+          }
+          buttonText={content.formButtonText ?? "Enviar mensaje"}
+        />
       </div>
 
       <div className="mt-12 flex flex-col items-center justify-center gap-3 sm:flex-row">

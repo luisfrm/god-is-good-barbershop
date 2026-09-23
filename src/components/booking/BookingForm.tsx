@@ -6,8 +6,10 @@ import { Button } from "@/components/ui/button";
 import { formatTimeLabel } from "@/server/scheduling/time";
 import type { PublicAvailability } from "@/types/scheduling";
 
+// `text-base` on mobile stops iOS Safari from zooming in on focus and
+// `min-h-11` gives every field a 44px touch target.
 const inputClass =
-  "w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none";
+  "w-full min-h-11 rounded-md border border-input bg-background px-3 py-2 text-base focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none sm:text-sm";
 
 const DAY_LABELS = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
 
@@ -98,7 +100,7 @@ export default function BookingForm({ availability }: BookingFormProps) {
                 key={slot.start}
                 type="button"
                 onClick={() => setSelectedSlot(slot.start)}
-                className={`rounded-lg border px-3 py-2 text-sm transition ${
+                className={`min-h-11 rounded-lg border px-3 py-2 text-sm transition ${
                   selectedSlot === slot.start
                     ? "border-primary bg-primary text-primary-foreground"
                     : "border-border bg-background hover:border-primary/40"
@@ -139,7 +141,7 @@ export default function BookingForm({ availability }: BookingFormProps) {
       <Button
         type="submit"
         size="lg"
-        className="w-full sm:w-auto"
+        className="min-h-11 w-full sm:w-auto"
         disabled={pending || !selectedSlot}
       >
         {pending

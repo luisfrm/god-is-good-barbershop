@@ -48,6 +48,36 @@ describe("GET /api/availability", () => {
   });
 });
 
+describe("public site & SEO routes", () => {
+  it("serves the marketing pages statically", async () => {
+    for (const path of ["/", "/politicas", "/privacidad", "/reservar"]) {
+      const { res } = await get(path);
+      expect(res.status, `${path} should be 200`).toBe(200);
+    }
+  });
+
+  it("publishes a sitemap with the legal pages", async () => {
+    const { res, text } = await get("/sitemap.xml");
+    expect(res.status).toBe(200);
+    expect(text).toContain("<urlset");
+    expect(text).toContain("/politicas");
+    expect(text).toContain("/privacidad");
+  });
+
+  it("keeps the panel out of robots.txt", async () => {
+    const { res, text } = await get("/robots.txt");
+    expect(res.status).toBe(200);
+    expect(text).toContain("Disallow: /panel");
+    expect(text).toContain("Sitemap:");
+  });
+
+  it("exposes LocalBusiness and FAQ structured data on the home page", async () => {
+    const { text } = await get("/");
+    expect(text).toContain('"@type":"HairSalon"');
+    expect(text).toContain('"@type":"FAQPage"');
+  });
+});
+
 describe("panel auth gate", () => {
   it("redirects /panel/dashboard without cookie to login", async () => {
     const { res } = await get("/panel/dashboard");

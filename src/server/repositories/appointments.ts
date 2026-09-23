@@ -23,7 +23,7 @@ export async function listAppointments(filters?: {
     binds.push(like, like, like);
   }
   const where = clauses.length > 0 ? `WHERE ${clauses.join(" AND ")}` : "";
-  const rows = await getDb()
+  const rows = await (await getDb())
     .prepare(
       `SELECT * FROM appointments ${where} ORDER BY date ASC, start_time ASC`
     )
@@ -36,7 +36,7 @@ export async function listAppointmentsInRange(
   fromDate: string,
   toDate: string
 ): Promise<Appointment[]> {
-  const rows = await getDb()
+  const rows = await (await getDb())
     .prepare(
       `SELECT * FROM appointments
        WHERE date >= ?1 AND date <= ?2
@@ -48,7 +48,7 @@ export async function listAppointmentsInRange(
 }
 
 export async function findAppointment(id: string): Promise<Appointment | null> {
-  return getDb()
+  return (await getDb())
     .prepare("SELECT * FROM appointments WHERE id = ?1")
     .bind(id)
     .first<Appointment>();
@@ -57,7 +57,7 @@ export async function findAppointment(id: string): Promise<Appointment | null> {
 export async function insertAppointment(
   input: Appointment
 ): Promise<Appointment> {
-  await getDb()
+  await (await getDb())
     .prepare(
       `INSERT INTO appointments
          (id, name, email, phone, message, date, start_time, end_time, timezone, status, google_event_id, created_at, updated_at)
@@ -89,7 +89,7 @@ export async function updateAppointmentStatus(
   id: string,
   status: AppointmentStatus
 ): Promise<void> {
-  await getDb()
+  await (await getDb())
     .prepare(
       `UPDATE appointments
          SET status = ?2, updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
@@ -103,7 +103,7 @@ export async function updateAppointmentGoogleEvent(
   id: string,
   googleEventId: string
 ): Promise<void> {
-  await getDb()
+  await (await getDb())
     .prepare(
       `UPDATE appointments
          SET google_event_id = ?2, updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
@@ -114,13 +114,13 @@ export async function updateAppointmentGoogleEvent(
 }
 
 export async function deleteAppointment(id: string): Promise<void> {
-  await getDb().prepare("DELETE FROM appointments WHERE id = ?1").bind(id).run();
+  await (await getDb()).prepare("DELETE FROM appointments WHERE id = ?1").bind(id).run();
 }
 
 export async function listBookedSlots(fromDate: string): Promise<
   { date: string; start_time: string; status: AppointmentStatus }[]
 > {
-  const rows = await getDb()
+  const rows = await (await getDb())
     .prepare(
       `SELECT date, start_time, status FROM appointments
        WHERE date >= ?1 AND status <> 'cancelled'
@@ -134,7 +134,7 @@ export async function listBookedSlots(fromDate: string): Promise<
 export async function countAppointmentsByStatus(): Promise<
   Record<string, number>
 > {
-  const rows = await getDb()
+  const rows = await (await getDb())
     .prepare(
       "SELECT status, COUNT(*) AS count FROM appointments GROUP BY status"
     )

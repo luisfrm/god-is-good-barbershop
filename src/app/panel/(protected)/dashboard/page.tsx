@@ -1,18 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import {
-  CalendarCheck,
-  CalendarDays,
-  CheckCircle2,
-  Clock,
-  XCircle,
-} from "lucide-react";
-import {
-  getAppointmentStats,
-  listAppointmentsAdmin,
-} from "@/server/services/appointments";
+import { listAppointmentsAdmin } from "@/server/services/appointments";
+import { getDashboardAnalytics } from "@/server/services/analytics";
 import { getContentOrThrow } from "@/server/services/content";
 import { formatTimeLabel } from "@/server/scheduling/time";
+import AnalyticsPanels from "./AnalyticsPanels";
 
 export const dynamic = "force-dynamic";
 
@@ -21,36 +13,17 @@ export const metadata: Metadata = {
 };
 
 export default async function DashboardPage() {
-  const [stats, upcoming, meta] = await Promise.all([
-    getAppointmentStats(),
+  const [analytics, appointments, meta] = await Promise.all([
+    getDashboardAnalytics(),
     listAppointmentsAdmin(),
     getContentOrThrow("site.meta"),
   ]);
 
-  const pending = stats.byStatus.pending ?? 0;
-  const confirmed = stats.byStatus.confirmed ?? 0;
-  const completed = stats.byStatus.completed ?? 0;
-  const cancelled = stats.byStatus.cancelled ?? 0;
-  const today = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "America/Caracas",
-  }).format(new Date());
-
-  const todays = upcoming.filter((a) => a.date === today);
-  const nextUp = upcoming
+  const today = analytics.today;
+  const todays = appointments.filter((a) => a.date === today);
+  const nextUp = appointments
     .filter((a) => a.date >= today && a.status !== "cancelled")
     .slice(0, 8);
-
-  const cards = [
-    {
-      label: "Total citas",
-      value: stats.total,
-      icon: CalendarDays,
-    },
-    { label: "Pendientes", value: pending, icon: Clock },
-    { label: "Confirmadas", value: confirmed, icon: CalendarCheck },
-    { label: "Completadas", value: completed, icon: CheckCircle2 },
-    { label: "Canceladas", value: cancelled, icon: XCircle },
-  ];
 
   return (
     <div className="space-y-8">
@@ -59,33 +32,18 @@ export default async function DashboardPage() {
           Dashboard
         </h1>
         <p className="mt-1 text-muted-foreground">
-          {meta.name} · resumen de citas y actividad.
+          {meta.name} · analíticas de citas y actividad.
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-5">
-        {cards.map((card) => (
-          <div
-            key={card.label}
-            className="rounded-2xl border border-border bg-background p-5 shadow-xs"
-          >
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">{card.label}</span>
-              <card.icon className="h-4 w-4 text-primary" />
-            </div>
-            <p className="mt-3 font-serif text-3xl font-bold text-foreground">
-              {card.value}
-            </p>
-          </div>
-        ))}
-      </div>
+      <AnalyticsPanels analytics={analytics} />
 
       <div className="grid gap-6 lg:grid-cols-2">
         <section className="rounded-2xl border border-border bg-background p-6 shadow-xs">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="font-serif text-xl font-bold">Hoy</h2>
             <span className="text-sm text-muted-foreground">
-              {todays.length} cita(s)
+              {todays.length} cita(s) · {today}
             </span>
           </div>
           {todays.length === 0 ? (

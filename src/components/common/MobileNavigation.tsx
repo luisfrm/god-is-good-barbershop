@@ -47,7 +47,9 @@ export default function MobileNavigation({
           </SheetDescription>
         </SheetHeader>
 
-        <div className="flex flex-col space-y-6 px-4">
+        {/* `flex-1` + `mt-auto` on the contact block keeps it pinned to the
+            bottom of the sheet, and `overflow-y-auto` handles short screens. */}
+        <div className="flex flex-1 flex-col gap-6 overflow-y-auto px-4 pb-6">
           <nav className="flex flex-col">
             {navItems.map((item) => (
               <a
@@ -68,23 +70,23 @@ export default function MobileNavigation({
           </Button>
 
           {business && (
-            <div className="mt-auto space-y-3 border-t border-border/50 pt-6 text-sm text-muted-foreground">
+            <div className="mt-auto flex flex-col gap-1 border-t border-border/50 pt-5 text-sm text-muted-foreground">
               <a
                 href={`tel:${business.phone}`}
-                className="flex items-center gap-3 transition-colors hover:text-primary"
+                className="flex min-h-11 items-center gap-3 transition-colors hover:text-primary"
               >
-                <Phone className="h-4 w-4 text-primary" />
+                <Phone className="h-4 w-4 shrink-0 text-primary" />
                 {business.phoneDisplay}
               </a>
               <a
                 href={`mailto:${business.email}`}
-                className="flex items-center gap-3 transition-colors hover:text-primary"
+                className="flex min-h-11 items-center gap-3 break-all transition-colors hover:text-primary"
               >
-                <Mail className="h-4 w-4 text-primary" />
+                <Mail className="h-4 w-4 shrink-0 text-primary" />
                 {business.email}
               </a>
-              <span className="flex items-center gap-3">
-                <MapPin className="h-4 w-4 text-primary" />
+              <span className="flex min-h-11 items-center gap-3">
+                <MapPin className="h-4 w-4 shrink-0 text-primary" />
                 {business.address}
               </span>
             </div>

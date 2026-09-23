@@ -41,9 +41,10 @@ considering a change done.
 src/
   proxy.ts                    # Next 16 middleware: cheap cookie gate for /panel/*
   app/
-    (site)/                   # Public site (Header/Footer/Widgets layout)
-      page.tsx                # Home — composes CMS sections
-      reservar/               # Public booking page
+    (site)/                   # Public site (Header/Footer/Widgets layout), ISR 15 min
+      page.tsx                # Home — composes CMS sections + FAQ JSON-LD
+      reservar/               # Public booking page (dynamic: live availability)
+      politicas/  privacidad/ # CMS-driven legal pages
     panel/
       init/                   # First-run onboarding (only while 0 users exist)
       login/ register/        # Auth screens (AuthForm)
@@ -56,15 +57,16 @@ src/
       appointments/           # POST public booking
       appointments/export/    # GET CSV export (panel, session-gated)
       google/{auth,callback}/ # Google Calendar OAuth
-  components/                 # booking/ common/ home/ panel/ ui/
+    sitemap.ts  robots.ts     # SEO routes (sitemap from PUBLIC_ROUTES)
+  components/                 # booking/ common/ home/ legal/ panel/ ui/
   server/
-    db.ts                     # getDb() → D1 binding (throws if missing)
+    db.ts                     # getDb() → D1 binding, async (throws if missing)
     models.ts                 # Row + view-model types
     repositories/             # Raw SQL, one file per table
     services/                 # Business logic (validation, orchestration)
-    scheduling/               # Pure slot/time/preset/calendar helpers
+    scheduling/               # Pure slot/time/preset/calendar/analytics helpers
   types/                      # CMS + scheduling contracts (shared client/server)
-  lib/                        # utils, timezones, csv, whatsapp
+  lib/                        # utils, timezones, csv, whatsapp, seo
 migrations/                   # D1 SQL migrations (0001 init, 0002 seed, …)
 tests/                        # unit/ integration/ e2e/
 ```
@@ -92,15 +94,33 @@ and safe to import from client components (e.g. `formatTimeLabel`).
 
 Sections are declared once in `src/types/cms.ts`
 (`CmsSectionData`, `CMS_SECTION_KEYS`, `CMS_SECTION_LABELS`,
-`isCmsSectionKey`). Each section has a structured editor in
-`src/app/panel/(protected)/content/[section]/page.tsx` (plus client editors
-`NavItemsEditor`, `ParagraphsEditor`, `ServicesItemsEditor`). **There are no
-silent fallbacks**: `getContentOrThrow` throws if a row is missing — the seed
-migration is mandatory.
+`CMS_SECTION_GROUPS`, `isCmsSectionKey`). Current sections: `site.meta`,
+`site.nav`, `home.hero`, `home.services`, `home.about`, `home.gallery`,
+`home.testimonials`, `home.faq`, `home.contact`, `home.cta`, `legal.terms`,
+`legal.privacy`.
 
-To add a section: add the type + key + label in `types/cms.ts`, add a `case`
-in `saveSectionAction` and in the `[section]` editor, and add a seed row in a
-migration.
+Each section has a structured editor in
+`src/app/panel/(protected)/content/[section]/page.tsx` (plus client editors
+`NavItemsEditor`, `ParagraphsEditor`, `ServicesItemsEditor` and the generic
+`RepeaterEditor` used by gallery/testimonials/FAQ/legal lists). **There are no
+silent fallbacks**: `getContentOrThrow` throws if a row is missing — the seed
+migrations are mandatory.
+
+To add a section: add the type + key + label in `types/cms.ts` (and to a group
+in `CMS_SECTION_GROUPS`), add a `case` in `saveSectionAction` and in the
+`[section]` editor, then add a seed row in a migration.
+
+### Rendering & caching
+
+- Public site pages are **static (ISR)**: `revalidate = 900` in
+  `(site)/layout.tsx` / `(site)/page.tsx`, 24 h for the legal pages,
+  `sitemap.ts` and `robots.ts`. `/reservar` and everything under `/panel` stay
+  dynamic.
+- Saving anything from the panel calls `revalidatePath("/", "layout")`, so CMS
+  edits are live immediately — never add a page that can't be revalidated this
+  way without updating the actions.
+- `NEXT_PUBLIC_APP_URL` feeds `metadataBase`, canonical URLs, sitemap and
+  robots; keep it set per environment.
 
 ## Conventions
 
@@ -118,9 +138,10 @@ migration.
 
 - **Unit** (`tests/unit`): pure helpers and services with repository mocks.
   Existing: `slots`, `time`, `validation`, `content`, `google`, `presets`,
-  `calendar`, `csv`, `whatsapp`, `blockedDates`, `utils`.
-- **Integration** (`tests/integration`): hits a running server for API shape and
-  auth redirects.
+  `calendar`, `csv`, `whatsapp`, `blockedDates`, `seo`, `analytics`,
+  `cms-sections`, `utils` (115 tests).
+- **Integration** (`tests/integration`): hits a running server for API shape,
+  public/SEO routes, JSON-LD presence and auth redirects.
 - **E2E** (`tests/e2e`): Playwright flows for auth, public booking, CMS save.
 
 Notes/gaps to keep in mind: tests hit a seeded local D1, so DB-dependent tests
@@ -134,6 +155,11 @@ paths.
   before the running dev server can use the new table.
 - `pnpm dev` is required (not a bare `next dev`) so the D1 binding resolves;
   otherwise `getDb()` throws by design.
+- `getDb()` is **async** — always `(await getDb()).prepare(...)`. The async
+  Cloudflare context is also what lets `next build` prerender the static pages
+  against the local D1; the sync variant throws outside a request scope.
+- Adding/removing a public route means updating `PUBLIC_ROUTES` in
+  `src/lib/seo.ts` (sitemap) and the integration test expectations.
 - Date/time logic is timezone-sensitive: `zonedDateKey(date, tz)` converts an
   instant to a `YYYY-MM-DD` key in the configured timezone. Use it instead of
   hardcoding `America/Caracas`.

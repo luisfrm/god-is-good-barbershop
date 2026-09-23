@@ -24,8 +24,8 @@ export default function Footer({
 
   return (
     <footer className="border-t border-primary/20 bg-foreground text-background">
-      <div className="mx-auto w-full max-w-6xl px-6 py-16">
-        <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mx-auto w-full max-w-6xl px-6 py-12 sm:py-16">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-12 lg:grid-cols-4">
           <div className="space-y-4">
             <div>
               <span className="font-serif text-2xl font-bold tracking-tight">
@@ -44,12 +44,12 @@ export default function Footer({
             <h3 className="mb-5 text-xs font-medium uppercase tracking-[0.2em] text-primary">
               Explorar
             </h3>
-            <ul className="space-y-3 text-sm">
+            <ul className="space-y-0.5 text-sm">
               {navItems.map((item) => (
                 <li key={item.href}>
                   <a
                     href={item.href}
-                    className="text-background/70 transition-colors hover:text-primary"
+                    className="inline-flex min-h-11 items-center text-background/70 transition-colors hover:text-primary"
                   >
                     {item.text}
                   </a>
@@ -62,11 +62,11 @@ export default function Footer({
             <h3 className="mb-5 text-xs font-medium uppercase tracking-[0.2em] text-primary">
               Contacto
             </h3>
-            <ul className="space-y-3 text-sm">
+            <ul className="space-y-1 text-sm">
               <li>
                 <a
                   href={`tel:${business.phone}`}
-                  className="flex items-center gap-3 text-background/70 transition-colors hover:text-primary"
+                  className="inline-flex min-h-11 items-center gap-3 text-background/70 transition-colors hover:text-primary"
                 >
                   <Phone className="h-4 w-4 shrink-0 text-primary" />
                   {business.phoneDisplay}
@@ -75,14 +75,14 @@ export default function Footer({
               <li>
                 <a
                   href={`mailto:${business.email}`}
-                  className="flex items-center gap-3 text-background/70 transition-colors hover:text-primary"
+                  className="inline-flex min-h-11 items-center gap-3 break-all text-background/70 transition-colors hover:text-primary"
                 >
                   <Mail className="h-4 w-4 shrink-0 text-primary" />
                   {business.email}
                 </a>
               </li>
               <li>
-                <span className="flex items-center gap-3 text-background/70">
+                <span className="flex items-center gap-3 py-1.5 text-background/70">
                   <MapPin className="h-4 w-4 shrink-0 text-primary" />
                   {business.address}
                 </span>
@@ -97,32 +97,48 @@ export default function Footer({
             <p className="mb-4 text-sm leading-relaxed text-background/70">
               Agenda tu cita en línea o por WhatsApp.
             </p>
-            <Button asChild className="w-full">
+            <Button asChild className="min-h-11 w-full">
               <a href="/reservar">Reservar cita</a>
             </Button>
             <a
               href={business.mapsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-3 inline-flex text-sm text-background/70 transition-colors hover:text-primary"
+              className="mt-1 inline-flex min-h-11 items-center text-sm text-background/70 transition-colors hover:text-primary"
             >
               Ver ubicación →
             </a>
           </div>
         </div>
 
-        <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-background/10 pt-8 text-xs text-background/60 md:flex-row">
-          <p>
-            © {year} <span className="font-medium text-primary">{name}</span>.
-            Todos los derechos reservados.
-          </p>
-          <p>
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-background/10 pt-8 text-xs text-background/60 md:flex-row">
+          <div className="flex flex-col items-center gap-2 md:flex-row md:gap-4">
+            <p>
+              © {year} <span className="font-medium text-primary">{name}</span>.
+              Todos los derechos reservados.
+            </p>
+            <nav aria-label="Legal" className="flex items-center gap-4">
+              <a
+                href="/politicas"
+                className="inline-flex min-h-11 items-center transition-colors hover:text-primary"
+              >
+                Términos y condiciones
+              </a>
+              <a
+                href="/privacidad"
+                className="inline-flex min-h-11 items-center transition-colors hover:text-primary"
+              >
+                Privacidad
+              </a>
+            </nav>
+          </div>
+          <p className="inline-flex min-h-11 flex-wrap items-center justify-center gap-1">
             Desarrollado por{" "}
             <a
               href="https://luisrivas.site"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-semibold text-primary underline-offset-4 transition-colors hover:text-primary/80 hover:underline"
+              className="inline-flex min-h-11 items-center font-semibold text-primary underline-offset-4 transition-colors hover:text-primary/80 hover:underline"
             >
               Luis Rivas
             </a>

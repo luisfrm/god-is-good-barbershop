@@ -5,6 +5,7 @@ import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { NavItem } from "@/types/cms";
+import type { SettingsBusiness } from "@/server/models";
 import MobileNavigation from "./MobileNavigation";
 
 interface HeaderProps {
@@ -12,6 +13,7 @@ interface HeaderProps {
   navItems: NavItem[];
   ctaText: string;
   ctaHref: string;
+  business?: SettingsBusiness;
 }
 
 export default function Header({
@@ -19,6 +21,7 @@ export default function Header({
   navItems,
   ctaText,
   ctaHref,
+  business,
 }: HeaderProps) {
   const [activeSection, setActiveSection] = useState("home");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -48,7 +51,7 @@ export default function Header({
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-6">
         <a
           href="#home"
-          className="flex flex-col leading-none transition-all hover:scale-105"
+          className="flex min-h-11 flex-col justify-center leading-none transition-all hover:scale-105"
         >
           <span className="font-serif text-xl font-bold tracking-tight text-foreground">
             {shortName}
@@ -82,10 +85,11 @@ export default function Header({
           <Button
             variant="ghost"
             size="icon"
+            className="size-11"
             onClick={() => setIsMenuOpen(true)}
             aria-label="Abrir menú"
           >
-            <Menu className="h-5 w-5" />
+            <Menu className="h-6 w-6" />
           </Button>
         </div>
       </div>
@@ -97,6 +101,7 @@ export default function Header({
         navItems={navItems}
         ctaText={ctaText}
         ctaHref={ctaHref}
+        business={business}
       />
     </header>
   );

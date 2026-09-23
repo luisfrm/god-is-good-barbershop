@@ -12,21 +12,21 @@ function toPublic(row: UserRow): PublicUser {
 }
 
 export async function countUsers(): Promise<number> {
-  const row = await getDb()
+  const row = await (await getDb())
     .prepare("SELECT COUNT(*) AS count FROM users")
     .first<{ count: number }>();
   return row?.count ?? 0;
 }
 
 export async function findUserByEmail(email: string): Promise<UserRow | null> {
-  return getDb()
+  return (await getDb())
     .prepare("SELECT * FROM users WHERE email = ?1")
     .bind(email.toLowerCase().trim())
     .first<UserRow>();
 }
 
 export async function findUserById(id: string): Promise<PublicUser | null> {
-  const row = await getDb()
+  const row = await (await getDb())
     .prepare(
       "SELECT id, email, name, phone, created_at FROM users WHERE id = ?1"
     )
@@ -45,7 +45,7 @@ export async function insertUser(input: {
   passwordIterations: number;
 }): Promise<PublicUser> {
   const email = input.email.toLowerCase().trim();
-  await getDb()
+  await (await getDb())
     .prepare(
       `INSERT INTO users (id, email, name, phone, password_hash, password_salt, password_iterations)
        VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)`

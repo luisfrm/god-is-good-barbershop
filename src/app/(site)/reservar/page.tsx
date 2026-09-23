@@ -33,12 +33,12 @@ export default async function ReservarPage({
       <section className="mx-auto w-full max-w-3xl px-6 py-16">
         <Link
           href="/"
-          className="text-sm text-muted-foreground hover:text-foreground"
+          className="inline-flex min-h-11 items-center text-sm text-muted-foreground hover:text-foreground"
         >
           ← Volver al inicio
         </Link>
 
-        <span className="mt-6 block text-xs font-semibold uppercase tracking-[0.3em] text-primary">
+        <span className="mt-3 block text-xs font-semibold uppercase tracking-[0.3em] text-primary">
           {meta.shortName}
         </span>
         <h1 className="mt-3 font-serif text-4xl font-bold tracking-tight text-foreground sm:text-5xl">

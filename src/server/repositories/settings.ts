@@ -2,7 +2,7 @@ import { getDb } from "@/server/db";
 import type { SettingsRow } from "@/server/models";
 
 export async function findSettings(): Promise<SettingsRow | null> {
-  return getDb().prepare("SELECT * FROM settings WHERE id = 1").first<SettingsRow>();
+  return (await getDb()).prepare("SELECT * FROM settings WHERE id = 1").first<SettingsRow>();
 }
 
 export interface SettingsUpdate {
@@ -31,7 +31,7 @@ export async function updateSettings(patch: SettingsUpdate): Promise<void> {
   const columns = entries.map(([key]) => `${key} = ?`).join(", ");
   const values = entries.map(([, v]) => v as string | number | null);
 
-  await getDb()
+  await (await getDb())
     .prepare(
       `UPDATE settings SET ${columns}, updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now') WHERE id = 1`
     )

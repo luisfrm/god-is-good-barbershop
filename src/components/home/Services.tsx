@@ -46,9 +46,9 @@ const Services = ({ content, whatsappUrl }: ServicesProps) => {
           return (
             <div
               key={service.name}
-              className="group flex flex-col items-center rounded-2xl border border-background/10 bg-background/5 p-8 text-center transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:bg-background/10"
+              className="flex flex-col items-center rounded-2xl border border-background/10 bg-background/5 p-8 text-center"
             >
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/15 text-primary ring-4 ring-primary/10 transition-colors duration-300 group-hover:bg-primary group-hover:text-primary-foreground">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/15 text-primary ring-4 ring-primary/10">
                 <Icon className="h-6 w-6" />
               </div>
               <h3 className="mt-6 font-serif text-2xl font-bold">
@@ -63,10 +63,10 @@ const Services = ({ content, whatsappUrl }: ServicesProps) => {
                 </span>
                 <a
                   href="/reservar"
-                  className="inline-flex items-center gap-1 text-sm font-medium text-background/80 transition-colors hover:text-primary"
+                  className="group/link -mr-2 inline-flex min-h-11 items-center gap-1 px-2 text-sm font-medium text-background/80 transition-colors hover:text-primary"
                 >
                   Reservar
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover/link:translate-x-0.5" />
                 </a>
               </div>
             </div>

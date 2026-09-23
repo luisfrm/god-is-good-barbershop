@@ -10,7 +10,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ content }) => {
   return (
     <section
       id="home"
-      className="relative flex h-[820px] w-full items-center justify-center md:h-dvh"
+      className="relative flex min-h-svh w-full items-center justify-center md:h-dvh md:min-h-0"
     >
       <Image
         src={content.imageDesktop}
