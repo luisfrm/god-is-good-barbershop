@@ -1,20 +1,16 @@
 {
-  "name": "God's good BarberShop",
+  "name": "God's Good BarberShop",
   "short_name": "God's Good",
+  "description": "Barbería de estilo clásico en Maracaibo.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0c0a09",
+  "theme_color": "#c8a96a",
   "icons": [
     {
-      "src": "/favicon-256x256.png",
-      "sizes": "256x256",
-      "type": "image/png"
-    },
-    {
       "src": "/favicon.ico",
-      "sizes": "32x32",
-      "type": "image/ico"
+      "sizes": "any",
+      "type": "image/x-icon"
     }
-  ],
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff",
-  "display": "standalone"
+  ]
 }
-

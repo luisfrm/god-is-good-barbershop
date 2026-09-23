@@ -1,0 +1,18 @@
+export const COMMON_TIMEZONES: string[] = [
+  "America/Caracas",
+  "America/Bogota",
+  "America/Lima",
+  "America/Santiago",
+  "America/Buenos_Aires",
+  "America/Sao_Paulo",
+  "America/Mexico_City",
+  "America/New_York",
+  "America/Chicago",
+  "America/Denver",
+  "America/Los_Angeles",
+  "Europe/London",
+  "Europe/Madrid",
+  "Europe/Paris",
+  "Europe/Berlin",
+  "UTC",
+];
